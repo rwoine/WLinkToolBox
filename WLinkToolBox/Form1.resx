@@ -120,10 +120,30 @@
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMkMEa+wAAALoSURBVDhPdZTL
+        a1NBFMaTtmp9IrrxuVBXFu2iyZ17ibZ35tZHwIKKjfoXuFO6ciFCFm4ERe1K3OjOrVuhSN3owgeillpU
+        TNXq7U1yE5GCBbXx+yZ34vR1YJgvd+b85sw5Z5IyVigU2hO5lE5TF4vFNqNhtubM303zfb8Tk16kThxT
+        +Xx+lYFjXpnJZFZQY08Hf1PfwbeSL07UpHPjPfbrCCZ7e7bWlXPri/LOj/c7mxOnTjpS09kACOVB1GHg
+        iWnlvqgr0YiVeGz2p0C/ECmXHxs1JepfAzE0nDgtBZvDKCtxdVqKPxomndk3ys1wj7YPCJkwLpYBrjb1
+        yMtDuW0LYWGv2IX15wyA+xFAY1J6FzWIBof2UVyvppwSTjWwRgUDv0s/+9y9BvZDOker0olt2HfpPmg0
+        859uXZn2SbpnbBiH1lJUx33h1X0xVMUVbVgoxevI71oH9/Tg4OBqzhrG088hCuTyvg3jAYy6LsUsU7IA
+        NhX3ZncSMjAwsKYF45U5qEdQ4Ug64/NgGAthkRRRNRBdcLFhacPRZCafo46kV6QTLQdDZaNa4HbTz4Z5
+        nvf/ygZGzQJMSO8AivR7UWTQmB+iiB02jPkzj0E/J0KoTTVrUlxaCmb0ZyWuY/si2LwrG1hVZk8hf3PL
+        wahx2FysnNM2jC8LUzNK9g9hcV/P/liKGQOAnsWruYLqTxkYZ66hMDOhn91Hf+bPREdrY/4qudx6ACZa
+        MCXCd4FQ3FD1xY5QiVctWALGeHvT9zcamIlWXxkNfNfA0MBPHqncnmRNVzM83L02ltl707iuDS5L5xr9
+        ecNWYcpSHIuaJ/5FZMPFfH6DXkhgnI2OA/cs9lUIY+HY9M/6D+5uPbuxQtdK9NZHbAoR5XHrCc2D2QUY
+        RQpQuNv4y/vFfg0DUeB3WFuq5Dtb0HOXx454mxIYzX6bumntapqcPQ287d/6nJMlfGOX2IXRlU6k0YSZ
+        3rK1BvOAVs6ahcVaKvUPo1Hzx0G5Ta0AAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="serialPort1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
-  <metadata name="timerRefreshCom.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>241, 17</value>
   </metadata>
 </root>

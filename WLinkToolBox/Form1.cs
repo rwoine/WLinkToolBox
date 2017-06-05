@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,33 +17,29 @@ namespace WLinkToolBox
     {
 
         String[] GL_pComPort_Str = SerialPort.GetPortNames();
+        Queue<String> debugDataQueue = new Queue<String>();
 
+        /* ************************************************************************************* */
+        /* Constructor */
+        /* ************************************************************************************* */
         public Form1()
         {
             InitializeComponent();
 
-            // Setup Debug interface
-            comboBoxPortComList.Items.Clear();
-            comboBoxPortComList.Items.AddRange(GL_pComPort_Str);
-            if (GL_pComPort_Str.Length != 0)
-            {
-                comboBoxPortComList.SelectedIndex = 0;
-                serialPort1.PortName = GL_pComPort_Str[comboBoxPortComList.SelectedIndex];
-            }
-            else
-            {
-                comboBoxPortComList.Text = "";
-            }
-
-            timerRefreshCom.Start();
-
+            debugDataQueue.Clear();
+            timer1.Start();
         }
+
+        /* ************************************************************************************* */
+        /* Functions */
+        /* ************************************************************************************* */
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        // Open & Close Serial Communication
         private void button1_Click(object sender, EventArgs e)
         {
             if(button1.Text == "Open")
@@ -54,7 +51,6 @@ namespace WLinkToolBox
                     comboBoxPortComList.Enabled = false;
 
                     serialPort1.Open();
-                    timerRefreshCom.Stop();
                 }
 
             } else
@@ -63,39 +59,50 @@ namespace WLinkToolBox
                 comboBoxPortComList.Enabled = true;
 
                 serialPort1.Close();
-                timerRefreshCom.Start();
             }
         }
 
+        // Select the COM Port
+        private void comboBoxPortComList_Click(object sender, EventArgs e)
+        {
+            if (!serialPort1.IsOpen)
+            {
+                // Refresh Port COM
+                GL_pComPort_Str = SerialPort.GetPortNames();
+
+                // Setup Debug interface
+                comboBoxPortComList.Items.Clear();
+                comboBoxPortComList.Items.AddRange(GL_pComPort_Str);
+                if (GL_pComPort_Str.Length != 0)
+                {
+                    comboBoxPortComList.SelectedIndex = 0;
+                    serialPort1.PortName = GL_pComPort_Str[comboBoxPortComList.SelectedIndex];
+                }
+                else
+                {
+                    comboBoxPortComList.Text = "";
+                }
+            }
+        }
+
+        // Get Data from Debug Source
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort sp = (SerialPort)sender;
-            Console.Write(sp.ReadExisting());
-            //textBoxDebug.AppendText(sp.ReadExisting());
+            debugDataQueue.Enqueue(sp.ReadExisting());
         }
 
-        private void timerRefreshCom_Tick(object sender, EventArgs e)
+        // Forward Data to Text Box
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            if(!serialPort1.IsOpen)
-            {
-                if (GL_pComPort_Str.Length != SerialPort.GetPortNames().Length)
-                {
-                    // Refresh Port COM
-                    GL_pComPort_Str = SerialPort.GetPortNames();
+            while (debugDataQueue.Count != 0)
+                this.textBoxDebug.AppendText(debugDataQueue.Dequeue());
+        }
 
-                    // Setup Debug interface
-                    comboBoxPortComList.Items.Clear();
-                    comboBoxPortComList.Items.AddRange(GL_pComPort_Str);
-                    if (GL_pComPort_Str.Length != 0)
-                    {
-                        comboBoxPortComList.SelectedIndex = 0;
-                        serialPort1.PortName = GL_pComPort_Str[comboBoxPortComList.SelectedIndex];
-                    } else
-                    {
-                        comboBoxPortComList.Text = "";
-                    }
-                }
-            }
+        // Clear Text Box
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.textBoxDebug.Clear();
         }
     }
 }
