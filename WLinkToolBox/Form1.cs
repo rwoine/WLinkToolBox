@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WLinkToolBox.WLinkApp;
 
 namespace WLinkToolBox
 {
@@ -19,6 +20,8 @@ namespace WLinkToolBox
         String[] GL_pComPort_Str = SerialPort.GetPortNames();
         Queue<String> debugDataQueue = new Queue<String>();
 
+        List<WCommand> WCommandList = new List<WCommand>();
+
         /* ************************************************************************************* */
         /* Constructor */
         /* ************************************************************************************* */
@@ -28,6 +31,38 @@ namespace WLinkToolBox
 
             debugDataQueue.Clear();
             timer1.Start();
+
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_GET_REVISION_ID));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_GPIO_READ));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_GPIO_WRITE));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_GPIO_SET_BIT));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_GPIO_CLR_BIT));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_GET_WEIGHT));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_GET_WEIGHT_ALIBI));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_SET_ZERO));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_GET_WEIGHT_ASCII));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_BADGE_READER_GET_ID));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_WRITE));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_READ));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_CLEAR));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_SET_BACKLIGHT));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_ENABLE_EXT_WRITE));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_DISABLE_EXT_WRITE));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_GET_EXT_WRITE_STATUS));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_LCD_GET_EXT_WRITE_DATA));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_EEPROM_WRITE));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_EEPROM_READ));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_RTC_SET_DATETIME));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_RTC_GET_DATETIME));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_COMPORT_OPEN));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_COMPORT_CLOSE));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_COMPORT_WRITE));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_COMPORT_ENABLE_TUNNEL));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_COMPORT_DISABLE_TUNNEL));
+            WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_TEST_CMD));
+
+            for (int i = 0; i < WCommandList.Count; i++)
+                comboBoxCommandId.Items.Add(WCommandList[i]);
         }
 
         /* ************************************************************************************* */
@@ -103,6 +138,15 @@ namespace WLinkToolBox
         private void button2_Click(object sender, EventArgs e)
         {
             this.textBoxDebug.Clear();
+        }
+
+
+        // Command ID
+        private void comboBoxCommandId_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder(2);
+            sb.AppendFormat("0x{0:x2}", ((WCommand)(comboBoxCommandId.SelectedItem)).getIdValue());
+            textBoxIdValue.Text = sb.ToString();
         }
     }
 }
