@@ -141,6 +141,11 @@ namespace WLinkToolBox.WLinkApp
             _paramList.AddRange(paramList);
         }
 
+        public void addParam(byte[] paramList)
+        {
+            _paramList.AddRange(paramList);
+        }
+
         public void clearAllParam()
         {
             _paramList.Clear();

@@ -21,6 +21,7 @@ namespace WLinkToolBox
         Queue<String> debugDataQueue = new Queue<String>();
 
         List<WCommand> WCommandList = new List<WCommand>();
+        WCommand WCommandCurrent;
 
         /* ************************************************************************************* */
         /* Constructor */
@@ -60,6 +61,8 @@ namespace WLinkToolBox
             WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_COMPORT_ENABLE_TUNNEL));
             WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_COMPORT_DISABLE_TUNNEL));
             WCommandList.Add(new WCommand(WCommand.WCMD_ID_ENUM.WCMD_TEST_CMD));
+
+            WCommandCurrent = new WCommand(WCommand.WCMD_ID_ENUM.WCMD_UNKNOWN);
 
             for (int i = 0; i < WCommandList.Count; i++)
                 comboBoxCommandId.Items.Add(WCommandList[i]);
@@ -130,8 +133,19 @@ namespace WLinkToolBox
         // Forward Data to Text Box
         private void timer1_Tick(object sender, EventArgs e)
         {
+            string Text = "";
             while (debugDataQueue.Count != 0)
-                this.textBoxDebug.AppendText(debugDataQueue.Dequeue());
+            {
+                Text = debugDataQueue.Dequeue();
+                //if (Text.Contains((char)0x02))
+                //{
+
+                //}
+                //else
+                //{
+                    textBoxDebug.AppendText(Text);
+                //}
+            }
         }
 
         // Clear Text Box
@@ -144,9 +158,140 @@ namespace WLinkToolBox
         // Command ID
         private void comboBoxCommandId_SelectedIndexChanged(object sender, EventArgs e)
         {
+            WCommandCurrent = (WCommand)(comboBoxCommandId.SelectedItem);
+            checkBox1.Enabled = true;
             StringBuilder sb = new StringBuilder(2);
-            sb.AppendFormat("0x{0:x2}", ((WCommand)(comboBoxCommandId.SelectedItem)).getIdValue());
+            sb.AppendFormat("0x{0:x2}", WCommandCurrent.getIdValue());
             textBoxIdValue.Text = sb.ToString();
+
+            UpdateCommand();
         }
+
+        // Parameters check box
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if(((CheckBox)(sender)).Checked)
+            {
+                textBoxParamNb.Text = "0x00";
+                textBoxParam.Enabled = true;
+
+
+            } else
+            {
+                textBoxParamNb.Text = "0x00";
+                textBoxParam.Enabled = false;
+                textBoxParam.Text = "";
+                textBoxParam.BackColor = Color.White;
+            }
+        }
+
+        private void textBoxParam_TextChanged(object sender, EventArgs e)
+        {
+            UpdateCommand();
+        }
+
+
+
+        private void buttonSendCommand_Click(object sender, EventArgs e)
+        {
+            if (serialPort1.IsOpen)
+            {
+                serialPort1.Write(WCommandCurrent.toByteAray().ToArray(), 0, WCommandCurrent.toByteAray().Count);
+            }
+        }
+
+
+
+
+
+        /* ************************************************************************************* */
+        /* Inner Functions */
+        /* ************************************************************************************* */
+        private int GetHexVal(char hex)
+        {
+            int val = (int)hex;
+
+            if((val >= 0x30) && (val <= 0x39))          // 0 - 9
+            {
+                return (val - 0x30);
+            } else if((val >= 0x41) && (val <= 0x46))   // A - F
+            {
+                return (val - 0x41 + 10);
+            } else if((val >= 0x61) && (val <= 0x66))   // a - f
+            {
+                return (val - 0x61 + 10);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private void UpdateCommand()
+        {
+            Boolean NoError_B = true;
+            textBoxParam.BackColor = Color.White;
+
+            Boolean HasParam_B = (textBoxParam.Text.Length > 1) ? true : false;
+
+
+            string[] WParams = textBoxParam.Text.Split(' ');
+            byte[] WParamByte = new byte[WParams.Length];
+
+
+            if (HasParam_B)
+            {
+                int i = 0;
+                foreach (string WParam in WParams)
+                {
+                    if (NoError_B)
+                    {
+                        if (WParam.Length == 2)
+                        {
+                            WParamByte[i] = (byte)((GetHexVal(WParam.ToCharArray()[0]) << 4) + (GetHexVal(WParam.ToCharArray()[1])));
+                            i++;
+                        }
+                        else
+                        {
+                            NoError_B = false;
+                        }
+
+                    }
+                }
+            }
+
+            if(NoError_B)
+            {
+                WCommandCurrent.clearAllParam();
+
+                if (HasParam_B)
+                {
+                    WCommandCurrent.addParam(WParamByte);
+                    StringBuilder sb = new StringBuilder(2);
+                    sb.AppendFormat("0x{0:X2}", WCommandCurrent.getParamCount());
+                    textBoxParamNb.Text = sb.ToString();
+                }
+                else
+                {
+                    textBoxParamNb.Text = "0x00";
+                }
+
+                textBoxWCommand.Text = "";
+                foreach (byte Value in WCommandCurrent.toByteAray())
+                {
+                    StringBuilder sb1 = new StringBuilder(2);
+                    sb1.AppendFormat("0x{0:X2}", Value);
+
+                    textBoxWCommand.Text += sb1.ToString();
+                    textBoxWCommand.Text += ' ';
+                }
+            }
+
+
+            if (!NoError_B)
+                textBoxParam.BackColor = Color.LightPink;
+        }
+
+
     }
 }
