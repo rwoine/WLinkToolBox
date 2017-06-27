@@ -43,6 +43,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonSendCommand = new System.Windows.Forms.Button();
             this.textBoxParam = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -56,11 +57,12 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.buttonSendCommand = new System.Windows.Forms.Button();
+            this.textBoxResponse = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -184,6 +186,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.groupBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.groupBox2.Controls.Add(this.textBoxResponse);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -219,6 +222,17 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Command";
+            // 
+            // buttonSendCommand
+            // 
+            this.buttonSendCommand.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSendCommand.Location = new System.Drawing.Point(893, 28);
+            this.buttonSendCommand.Name = "buttonSendCommand";
+            this.buttonSendCommand.Size = new System.Drawing.Size(70, 23);
+            this.buttonSendCommand.TabIndex = 8;
+            this.buttonSendCommand.Text = "Send";
+            this.buttonSendCommand.UseVisualStyleBackColor = true;
+            this.buttonSendCommand.Click += new System.EventHandler(this.buttonSendCommand_Click);
             // 
             // textBoxParam
             // 
@@ -346,16 +360,15 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // buttonSendCommand
+            // textBoxResponse
             // 
-            this.buttonSendCommand.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSendCommand.Location = new System.Drawing.Point(893, 28);
-            this.buttonSendCommand.Name = "buttonSendCommand";
-            this.buttonSendCommand.Size = new System.Drawing.Size(70, 23);
-            this.buttonSendCommand.TabIndex = 8;
-            this.buttonSendCommand.Text = "Send";
-            this.buttonSendCommand.UseVisualStyleBackColor = true;
-            this.buttonSendCommand.Click += new System.EventHandler(this.buttonSendCommand_Click);
+            this.textBoxResponse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxResponse.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResponse.Location = new System.Drawing.Point(6, 309);
+            this.textBoxResponse.Name = "textBoxResponse";
+            this.textBoxResponse.ReadOnly = true;
+            this.textBoxResponse.Size = new System.Drawing.Size(972, 20);
+            this.textBoxResponse.TabIndex = 3;
             // 
             // Form1
             // 
@@ -376,6 +389,8 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -412,6 +427,7 @@
         private System.Windows.Forms.TextBox textBoxParamNb;
         private System.Windows.Forms.TextBox textBoxParam;
         private System.Windows.Forms.Button buttonSendCommand;
+        private System.Windows.Forms.TextBox textBoxResponse;
     }
 }
 

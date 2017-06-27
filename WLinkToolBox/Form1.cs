@@ -23,6 +23,10 @@ namespace WLinkToolBox
         List<WCommand> WCommandList = new List<WCommand>();
         WCommand WCommandCurrent;
 
+        byte[] WResponseByteArray = new byte[256];
+        int ReponseIndex = 0;
+        int ResponseState = 0;
+
         /* ************************************************************************************* */
         /* Constructor */
         /* ************************************************************************************* */
@@ -126,25 +130,99 @@ namespace WLinkToolBox
         // Get Data from Debug Source
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            SerialPort sp = (SerialPort)sender;
-            debugDataQueue.Enqueue(sp.ReadExisting());
+            int i = 0;
+            int length = serialPort1.BytesToRead;
+            byte[] bytes = new byte[length];
+            byte singleByte = 0x00;
+
+            while (length != 0)
+            {
+                // Get one byte to test
+                singleByte = (byte)serialPort1.ReadByte();
+
+                // Check if response has been sent
+                if ((ResponseState == 0) && (singleByte == 0x02))
+                {
+                    ResponseState = 1;
+                    ReponseIndex = 0;
+                }
+
+
+                switch (ResponseState)
+                {
+                    // STX
+                    case 1:
+                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        ResponseState++;
+                        break;
+
+                    // ID
+                    case 2:
+                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        ResponseState++;
+                        break;
+
+                    // Status
+                    case 3:
+                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        if ((WResponseByteArray[1] & 0x80) == 0x80)
+                            ResponseState++;    // Get Lentgh and Data
+                        else
+                            ResponseState = 6;  // Get ETX
+                        break;
+
+                    // Length
+                    case 4:
+                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        ResponseState++;
+                        break;
+
+                    // Data
+                    case 5:
+                        if ((ReponseIndex - 4) < WResponseByteArray[3])
+                        {
+                            WResponseByteArray[ReponseIndex++] = singleByte;
+                        }
+                        else
+                        {
+                            ResponseState++;
+                        }
+                        break;
+
+                    // ETX
+                    case 6:
+                        WResponseByteArray[ReponseIndex++] = singleByte;
+
+                        textBoxResponse.Text = "";
+                        for (int j = 0; j < ReponseIndex; j++)
+                        {
+                            StringBuilder sb1 = new StringBuilder(2);
+                            sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
+
+                            textBoxResponse.Text += sb1.ToString();
+                            textBoxResponse.Text += ' ';
+                        }
+
+                        ResponseState = 0;  // Reset state machine
+                        break;
+
+
+                    default: bytes[i++] = singleByte;   break;
+                }
+                
+                
+                length--;
+            }
+
+            debugDataQueue.Enqueue(System.Text.Encoding.ASCII.GetString(bytes));
         }
 
         // Forward Data to Text Box
         private void timer1_Tick(object sender, EventArgs e)
         {
-            string Text = "";
             while (debugDataQueue.Count != 0)
             {
-                Text = debugDataQueue.Dequeue();
-                //if (Text.Contains((char)0x02))
-                //{
-
-                //}
-                //else
-                //{
-                    textBoxDebug.AppendText(Text);
-                //}
+                textBoxDebug.AppendText(debugDataQueue.Dequeue());
             }
         }
 
