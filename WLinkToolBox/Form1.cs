@@ -24,8 +24,10 @@ namespace WLinkToolBox
         WCommand WCommandCurrent;
 
         byte[] WResponseByteArray = new byte[256];
-        int ReponseIndex = 0;
+        int ResponseIndex = 0;
         int ResponseState = 0;
+
+        WResponse WResponseCurrent = new WResponse();
 
         /* ************************************************************************************* */
         /* Constructor */
@@ -144,7 +146,7 @@ namespace WLinkToolBox
                 if ((ResponseState == 0) && (singleByte == 0x02))
                 {
                     ResponseState = 1;
-                    ReponseIndex = 0;
+                    ResponseIndex = 0;
                 }
 
 
@@ -152,56 +154,60 @@ namespace WLinkToolBox
                 {
                     // STX
                     case 1:
-                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        WResponseByteArray[ResponseIndex++] = singleByte;
                         ResponseState++;
                         break;
 
                     // ID
                     case 2:
-                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        WResponseByteArray[ResponseIndex++] = singleByte;
                         ResponseState++;
                         break;
 
                     // Status
                     case 3:
-                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        WResponseByteArray[ResponseIndex++] = singleByte;
                         if ((WResponseByteArray[1] & 0x80) == 0x80)
                             ResponseState++;    // Get Lentgh and Data
                         else
-                            ResponseState = 6;  // Get ETX
+                            ResponseState = 6;  // Get ACK
                         break;
 
                     // Length
                     case 4:
-                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        WResponseByteArray[ResponseIndex++] = singleByte;
                         ResponseState++;
                         break;
 
                     // Data
                     case 5:
-                        if ((ReponseIndex - 4) < WResponseByteArray[3])
-                        {
-                            WResponseByteArray[ReponseIndex++] = singleByte;
-                        }
-                        else
-                        {
+                        WResponseByteArray[ResponseIndex++] = singleByte;
+                        if ((ResponseIndex - 4) == WResponseByteArray[3])
                             ResponseState++;
-                        }
                         break;
 
-                    // ETX
+                    // ACK
                     case 6:
-                        WResponseByteArray[ReponseIndex++] = singleByte;
+                        WResponseByteArray[ResponseIndex++] = singleByte;
+                        ResponseState++;
+                        break;
 
-                        textBoxResponse.Text = "";
-                        for (int j = 0; j < ReponseIndex; j++)
-                        {
-                            StringBuilder sb1 = new StringBuilder(2);
-                            sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
 
-                            textBoxResponse.Text += sb1.ToString();
-                            textBoxResponse.Text += ' ';
-                        }
+                    // ETX
+                    case 7:
+                        WResponseByteArray[ResponseIndex++] = singleByte;
+
+                        WResponseCurrent = new WResponse(WResponseByteArray, ResponseIndex);
+
+                        //textBoxResponse.Text = "";
+                        //for (int j = 0; j < ReponseIndex; j++)
+                        //{
+                        //    StringBuilder sb1 = new StringBuilder(2);
+                        //    sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
+
+                        //    textBoxResponse.Text += sb1.ToString();
+                        //    textBoxResponse.Text += ' ';
+                        //}
 
                         ResponseState = 0;  // Reset state machine
                         break;
@@ -220,10 +226,27 @@ namespace WLinkToolBox
         // Forward Data to Text Box
         private void timer1_Tick(object sender, EventArgs e)
         {
+            // Get Debug data
             while (debugDataQueue.Count != 0)
             {
                 textBoxDebug.AppendText(debugDataQueue.Dequeue());
             }
+
+            // Get Response data
+            if(!WResponseCurrent.isEmpty())
+            {
+                textBoxResponse.Text = "";
+                for (int j = 0; j < ResponseIndex; j++)
+                {
+                    StringBuilder sb1 = new StringBuilder(2);
+                    sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
+
+                    textBoxResponse.Text += sb1.ToString();
+                    textBoxResponse.Text += ' ';
+                }
+            }
+
+            
         }
 
         // Clear Text Box
@@ -275,6 +298,9 @@ namespace WLinkToolBox
             if (serialPort1.IsOpen)
             {
                 serialPort1.Write(WCommandCurrent.toByteAray().ToArray(), 0, WCommandCurrent.toByteAray().Count);
+                WResponseCurrent = new WResponse(); // empty response
+
+                
             }
         }
 

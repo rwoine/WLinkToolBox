@@ -12,34 +12,6 @@ namespace WLinkToolBox.WLinkApp
         WCMD_ID_ENUM _id = 0x00;
         List<Byte> _paramList;
 
-        public static readonly IList<String> WCommandListString = new ReadOnlyCollection<string>(new List<String> {
-            "GetRevisionId",
-            "GpioRead",
-            "GpioWrite",
-            "GpioSetbit",
-            "GpioClrbit",
-            "IndicatorGetWeight",
-            "IndicatorGetWeightAlibi",
-            "IndicatorSetZero",
-            "IndicatorGetWeightAscii",
-            "BadgereaderGetBadgeId",
-            "LcdWrite",
-            "LcdRead",
-            "LcdClear",
-            "LcdSetBacklight",
-            "LcdEnableExternalWrite",
-            "LcdDisableExternalWrite",
-            "LcdGetExternalWriteStatus",
-            "LcdGetExternalWriteData",
-            "EepromWrite",
-            "EepromRead",
-            "ComPortOpen",
-            "ComPortClose",
-            "ComPortWrite", 
-            "ComPortEnableTunnel",
-            "ComPortDisableTunnel"
-            });
-
         public enum WCMD_ID_ENUM
         {
             WCMD_UNKNOWN = 0x7F,

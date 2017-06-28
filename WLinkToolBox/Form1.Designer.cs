@@ -42,6 +42,7 @@
             this.comboBoxPortComList = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxResponse = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonSendCommand = new System.Windows.Forms.Button();
             this.textBoxParam = new System.Windows.Forms.TextBox();
@@ -57,7 +58,14 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.textBoxResponse = new System.Windows.Forms.TextBox();
+            this.textBoxResponseData = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.checkBoxResponseHasParam = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBoxResponseNb = new System.Windows.Forms.TextBox();
+            this.textBoxResponseIdValue = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBoxResponseId = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -186,7 +194,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.groupBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.groupBox2.Controls.Add(this.textBoxResponseId);
+            this.groupBox2.Controls.Add(this.textBoxResponseData);
             this.groupBox2.Controls.Add(this.textBoxResponse);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.checkBoxResponseHasParam);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.textBoxResponseIdValue);
+            this.groupBox2.Controls.Add(this.textBoxResponseNb);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -196,6 +212,16 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Response";
+            // 
+            // textBoxResponse
+            // 
+            this.textBoxResponse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxResponse.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResponse.Location = new System.Drawing.Point(6, 309);
+            this.textBoxResponse.Name = "textBoxResponse";
+            this.textBoxResponse.ReadOnly = true;
+            this.textBoxResponse.Size = new System.Drawing.Size(972, 20);
+            this.textBoxResponse.TabIndex = 3;
             // 
             // groupBox1
             // 
@@ -360,15 +386,90 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // textBoxResponse
+            // textBoxResponseData
             // 
-            this.textBoxResponse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxResponse.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxResponse.Location = new System.Drawing.Point(6, 309);
-            this.textBoxResponse.Name = "textBoxResponse";
-            this.textBoxResponse.ReadOnly = true;
-            this.textBoxResponse.Size = new System.Drawing.Size(972, 20);
-            this.textBoxResponse.TabIndex = 3;
+            this.textBoxResponseData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxResponseData.Enabled = false;
+            this.textBoxResponseData.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResponseData.Location = new System.Drawing.Point(96, 124);
+            this.textBoxResponseData.Name = "textBoxResponseData";
+            this.textBoxResponseData.ReadOnly = true;
+            this.textBoxResponseData.Size = new System.Drawing.Size(882, 20);
+            this.textBoxResponseData.TabIndex = 16;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(47, 100);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(43, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Param :";
+            // 
+            // checkBoxResponseHasParam
+            // 
+            this.checkBoxResponseHasParam.AutoSize = true;
+            this.checkBoxResponseHasParam.Enabled = false;
+            this.checkBoxResponseHasParam.Location = new System.Drawing.Point(96, 68);
+            this.checkBoxResponseHasParam.Name = "checkBoxResponseHasParam";
+            this.checkBoxResponseHasParam.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxResponseHasParam.TabIndex = 14;
+            this.checkBoxResponseHasParam.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(25, 68);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(65, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Has Param :";
+            // 
+            // textBoxResponseNb
+            // 
+            this.textBoxResponseNb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxResponseNb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResponseNb.Location = new System.Drawing.Point(96, 98);
+            this.textBoxResponseNb.Name = "textBoxResponseNb";
+            this.textBoxResponseNb.ReadOnly = true;
+            this.textBoxResponseNb.Size = new System.Drawing.Size(48, 20);
+            this.textBoxResponseNb.TabIndex = 11;
+            this.textBoxResponseNb.Text = "0x00";
+            this.textBoxResponseNb.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBoxResponseIdValue
+            // 
+            this.textBoxResponseIdValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxResponseIdValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResponseIdValue.Location = new System.Drawing.Point(285, 34);
+            this.textBoxResponseIdValue.Name = "textBoxResponseIdValue";
+            this.textBoxResponseIdValue.ReadOnly = true;
+            this.textBoxResponseIdValue.Size = new System.Drawing.Size(48, 20);
+            this.textBoxResponseIdValue.TabIndex = 12;
+            this.textBoxResponseIdValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(66, 36);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(24, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "ID :";
+            // 
+            // textBoxResponseId
+            // 
+            this.textBoxResponseId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxResponseId.Enabled = false;
+            this.textBoxResponseId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResponseId.Location = new System.Drawing.Point(96, 34);
+            this.textBoxResponseId.Name = "textBoxResponseId";
+            this.textBoxResponseId.ReadOnly = true;
+            this.textBoxResponseId.Size = new System.Drawing.Size(174, 20);
+            this.textBoxResponseId.TabIndex = 17;
             // 
             // Form1
             // 
@@ -428,6 +529,14 @@
         private System.Windows.Forms.TextBox textBoxParam;
         private System.Windows.Forms.Button buttonSendCommand;
         private System.Windows.Forms.TextBox textBoxResponse;
+        private System.Windows.Forms.TextBox textBoxResponseId;
+        private System.Windows.Forms.TextBox textBoxResponseData;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox checkBoxResponseHasParam;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBoxResponseIdValue;
+        private System.Windows.Forms.TextBox textBoxResponseNb;
     }
 }
 
