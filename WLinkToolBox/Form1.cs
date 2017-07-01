@@ -16,6 +16,7 @@ namespace WLinkToolBox
 
     public partial class Form1 : Form
     {
+        Boolean DebugFull_B = true;
 
         String[] GL_pComPort_Str = SerialPort.GetPortNames();
         Queue<String> debugDataQueue = new Queue<String>();
@@ -129,98 +130,118 @@ namespace WLinkToolBox
             }
         }
 
+        // Change tab
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 1)
+            {
+                DebugFull_B = false;
+            }
+            else
+            {
+                DebugFull_B = true;
+            }
+        }
+
         // Get Data from Debug Source
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            int i = 0;
-            int length = serialPort1.BytesToRead;
-            byte[] bytes = new byte[length];
-            byte singleByte = 0x00;
-
-            while (length != 0)
+            if (DebugFull_B)
             {
-                // Get one byte to test
-                singleByte = (byte)serialPort1.ReadByte();
-
-                // Check if response has been sent
-                if ((ResponseState == 0) && (singleByte == 0x02))
-                {
-                    ResponseState = 1;
-                    ResponseIndex = 0;
-                }
-
-
-                switch (ResponseState)
-                {
-                    // STX
-                    case 1:
-                        WResponseByteArray[ResponseIndex++] = singleByte;
-                        ResponseState++;
-                        break;
-
-                    // ID
-                    case 2:
-                        WResponseByteArray[ResponseIndex++] = singleByte;
-                        ResponseState++;
-                        break;
-
-                    // Status
-                    case 3:
-                        WResponseByteArray[ResponseIndex++] = singleByte;
-                        if ((WResponseByteArray[1] & 0x80) == 0x80)
-                            ResponseState++;    // Get Lentgh and Data
-                        else
-                            ResponseState = 6;  // Get ACK
-                        break;
-
-                    // Length
-                    case 4:
-                        WResponseByteArray[ResponseIndex++] = singleByte;
-                        ResponseState++;
-                        break;
-
-                    // Data
-                    case 5:
-                        WResponseByteArray[ResponseIndex++] = singleByte;
-                        if ((ResponseIndex - 4) == WResponseByteArray[3])
-                            ResponseState++;
-                        break;
-
-                    // ACK
-                    case 6:
-                        WResponseByteArray[ResponseIndex++] = singleByte;
-                        ResponseState++;
-                        break;
-
-
-                    // ETX
-                    case 7:
-                        WResponseByteArray[ResponseIndex++] = singleByte;
-
-                        WResponseCurrent = new WResponse(WResponseByteArray, ResponseIndex);
-
-                        //textBoxResponse.Text = "";
-                        //for (int j = 0; j < ReponseIndex; j++)
-                        //{
-                        //    StringBuilder sb1 = new StringBuilder(2);
-                        //    sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
-
-                        //    textBoxResponse.Text += sb1.ToString();
-                        //    textBoxResponse.Text += ' ';
-                        //}
-
-                        ResponseState = 0;  // Reset state machine
-                        break;
-
-
-                    default: bytes[i++] = singleByte;   break;
-                }
-                
-                
-                length--;
+                debugDataQueue.Enqueue(serialPort1.ReadExisting());
             }
+            else
+            {
+                int i = 0;
+                int length = serialPort1.BytesToRead;
+                byte[] bytes = new byte[length];
+                byte singleByte = 0x00;
 
-            debugDataQueue.Enqueue(System.Text.Encoding.ASCII.GetString(bytes));
+                while (length != 0)
+                {
+                    // Get one byte to test
+                    singleByte = (byte)serialPort1.ReadByte();
+
+                    // Check if response has been sent
+                    if ((ResponseState == 0) && (singleByte == 0x02))
+                    {
+                        ResponseState = 1;
+                        ResponseIndex = 0;
+                    }
+
+
+                    switch (ResponseState)
+                    {
+                        // STX
+                        case 1:
+                            WResponseByteArray[ResponseIndex++] = singleByte;
+                            ResponseState++;
+                            break;
+
+                        // ID
+                        case 2:
+                            WResponseByteArray[ResponseIndex++] = singleByte;
+                            ResponseState++;
+                            break;
+
+                        // Status
+                        case 3:
+                            WResponseByteArray[ResponseIndex++] = singleByte;
+                            if ((WResponseByteArray[1] & 0x80) == 0x80)
+                                ResponseState++;    // Get Lentgh and Data
+                            else
+                                ResponseState = 6;  // Get ACK
+                            break;
+
+                        // Length
+                        case 4:
+                            WResponseByteArray[ResponseIndex++] = singleByte;
+                            ResponseState++;
+                            break;
+
+                        // Data
+                        case 5:
+                            WResponseByteArray[ResponseIndex++] = singleByte;
+                            if ((ResponseIndex - 4) == WResponseByteArray[3])
+                                ResponseState++;
+                            break;
+
+                        // ACK
+                        case 6:
+                            WResponseByteArray[ResponseIndex++] = singleByte;
+                            ResponseState++;
+                            break;
+
+
+                        // ETX
+                        case 7:
+                            WResponseByteArray[ResponseIndex++] = singleByte;
+
+                            WResponseCurrent = new WResponse(WResponseByteArray, ResponseIndex);
+
+                            //textBoxResponse.Text = "";
+                            //for (int j = 0; j < ReponseIndex; j++)
+                            //{
+                            //    StringBuilder sb1 = new StringBuilder(2);
+                            //    sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
+
+                            //    textBoxResponse.Text += sb1.ToString();
+                            //    textBoxResponse.Text += ' ';
+                            //}
+
+                            ResponseState = 0;  // Reset state machine
+                            break;
+
+
+                        default: bytes[i++] = singleByte; break;
+                    }
+
+
+                    length--;
+                }
+
+                debugDataQueue.Enqueue(System.Text.Encoding.ASCII.GetString(bytes));
+            }
         }
 
         // Forward Data to Text Box
@@ -232,21 +253,66 @@ namespace WLinkToolBox
                 textBoxDebug.AppendText(debugDataQueue.Dequeue());
             }
 
-            // Get Response data
-            if(!WResponseCurrent.isEmpty())
+            if (!DebugFull_B)
             {
-                textBoxResponse.Text = "";
-                for (int j = 0; j < ResponseIndex; j++)
+                // Get Response data
+                if (!WResponseCurrent.isEmpty())
                 {
-                    StringBuilder sb1 = new StringBuilder(2);
-                    sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
+                    // Print out raw data
+                    textBoxResponse.Text = "";
+                    for (int j = 0; j < ResponseIndex; j++)
+                    {
+                        StringBuilder sb1 = new StringBuilder(2);
+                        sb1.AppendFormat("0x{0:X2}", WResponseByteArray[j]);
 
-                    textBoxResponse.Text += sb1.ToString();
-                    textBoxResponse.Text += ' ';
+                        textBoxResponse.Text += sb1.ToString();
+                        textBoxResponse.Text += ' ';
+                    }
+
+                    // Print out detailed elements
+                    textBoxResponseId.Text = WResponseCurrent.ToString();
+                    textBoxResponseIdValue.Text = new StringBuilder(2).AppendFormat("0x{0:X2}", WResponseCurrent.getIdValue()).ToString();
+
+                    if (WResponseCurrent.hasParam())
+                    {
+                        checkBoxResponseHasParam.Checked = true;
+                        textBoxResponseNb.Text = new StringBuilder(2).AppendFormat("0x{0:X2}", WResponseCurrent.getParamCount()).ToString();
+
+                        textBoxResponseData.Text = "";
+                        for (int k = 0; k < WResponseCurrent.getParamCount(); k++)
+                        {
+                            textBoxResponseData.Text += new StringBuilder(2).AppendFormat("0x{0:X2}", WResponseCurrent.getParam()[k]).ToString();
+                            textBoxResponseData.Text += ' ';
+                        }
+
+                    }
+                    else
+                    {
+                        checkBoxResponseHasParam.Checked = false;
+                        textBoxResponseNb.Text = "0x00";
+                        textBoxResponseData.Text = "";
+                    }
+
+                    if (WResponseCurrent.getAck() == 0x06)
+                        textBoxResponseId.BackColor = Color.LightGreen;
+                    else
+                        textBoxResponseId.BackColor = Color.LightPink;
+
+                    textBoxResponseStatus.Text = new StringBuilder(2).AppendFormat("0x{0:X2}", WResponseCurrent.getStatus()).ToString();
                 }
-            }
+                else
+                {
+                    textBoxResponseId.Text = "";
+                    textBoxResponse.Text = "";
+                    textBoxResponseIdValue.Text = "";
+                    checkBoxResponseHasParam.Checked = false;
+                    textBoxResponseNb.Text = "";
+                    textBoxResponseData.Text = "";
+                    textBoxResponseStatus.Text = "";
+                    textBoxResponseId.BackColor = Color.WhiteSmoke;
+                }
 
-            
+            }
         }
 
         // Clear Text Box
@@ -395,7 +461,6 @@ namespace WLinkToolBox
             if (!NoError_B)
                 textBoxParam.BackColor = Color.LightPink;
         }
-
 
     }
 }

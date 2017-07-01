@@ -34,6 +34,46 @@ namespace WLinkToolBox.WLinkApp
         /* ************************************************************************************* */
         /* Methods */
         /* ************************************************************************************* */
+        public override String ToString()
+        {
+            String retString = "";
+
+            switch ((WCommand.WCMD_ID_ENUM)((this._byteArray[1]) & 0x7F))
+            {
+                case WCommand.WCMD_ID_ENUM.WCMD_GET_REVISION_ID: retString = "GetRevisionId"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_GPIO_READ: retString = "GpioRead"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_GPIO_WRITE: retString = "GpioWrite"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_GPIO_SET_BIT: retString = "GpioSetbit"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_GPIO_CLR_BIT: retString = "GpioClrbit"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_GET_WEIGHT: retString = "IndicatorGetWeight"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_GET_WEIGHT_ALIBI: retString = "IndicatorGetWeightAlibi"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_SET_ZERO: retString = "IndicatorSetZero"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_INDICATOR_GET_WEIGHT_ASCII: retString = "IndicatorGetWeightAscii"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_BADGE_READER_GET_ID: retString = "BadgereaderGetBadgeId"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_WRITE: retString = "LcdWrite"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_READ: retString = "LcdRead"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_CLEAR: retString = "LcdClear"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_SET_BACKLIGHT: retString = "LcdSetBacklight"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_ENABLE_EXT_WRITE: retString = "LcdEnableExternalWrite"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_DISABLE_EXT_WRITE: retString = "LcdDisableExternalWrite"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_GET_EXT_WRITE_STATUS: retString = "LcdGetExternalWriteStatus"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_LCD_GET_EXT_WRITE_DATA: retString = "LcdGetExternalWriteData"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_EEPROM_WRITE: retString = "EepromWrite"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_EEPROM_READ: retString = "EepromRead"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_RTC_SET_DATETIME: retString = "RtcSetDateTime"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_RTC_GET_DATETIME: retString = "RtcGetDateTime"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_COMPORT_OPEN: retString = "ComPortOpen"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_COMPORT_CLOSE: retString = "ComPortClose"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_COMPORT_WRITE: retString = "ComPortWrite"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_COMPORT_ENABLE_TUNNEL: retString = "ComPortEnableTunnel"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_COMPORT_DISABLE_TUNNEL: retString = "ComPortDisableTunnel"; break;
+                case WCommand.WCMD_ID_ENUM.WCMD_TEST_CMD: retString = "TestCommand"; break;
+                default: retString = "N.A."; break;
+            }
+
+            return retString;
+        }
+
 
         public Boolean isEmpty()
         {
