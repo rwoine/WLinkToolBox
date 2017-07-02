@@ -331,6 +331,9 @@ namespace WLinkToolBox
             sb.AppendFormat("0x{0:x2}", WCommandCurrent.getIdValue());
             textBoxIdValue.Text = sb.ToString();
 
+            textBoxParam.Text = "";
+            checkBox1.Checked = false;
+
             UpdateCommand();
         }
 
